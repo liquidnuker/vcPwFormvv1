@@ -84,7 +84,6 @@ export default {
         });
       },
       login: function() {
-        console.log("login"); 
         let loginData = new FormData();
         loginData.append("l_name", this.l_name);
         loginData.append("l_password", this.l_password);
@@ -96,7 +95,9 @@ export default {
             "Content-Type": "multipart/form-data"
           }
         }).then(function (response) {
-          console.log(response.data);
+          // console.log(response.data);
+          console.log(response.data.loggedin + " user: " +
+          response.data.loggedinuser);
         }).catch(function () {
           console.log("error");
         });

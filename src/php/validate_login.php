@@ -1,6 +1,7 @@
 <?php 
 require "./vendor/gump.class.php";
 require "./connect.php";
+require "./loginstatus.php";
 
 $loginvalidator = new GUMP();
 
@@ -29,10 +30,12 @@ $loginvalidated = $loginvalidator->validate(
   $loginData, $rules
 );
 
+$validLogin = new loginstatus();
+
 // Check if validation was successful
 if($loginvalidated === TRUE) {
-  echo "Successful Validation\n";
-  print_r($loginData); // You can now use POST data safely
+  // echo "Successful Validation\n";
+  // print_r($loginData); // You can now use POST data safely
   // echo $postData['name'];
   // echo $postData['file']['name'];
 
@@ -48,15 +51,19 @@ if($loginvalidated === TRUE) {
     $row = $stmt->fetch();
 
     if (password_verify($_POST['l_password'], $row['password'])) {
-        echo 'valid! loggedin';
+        // echo "valid loggedin"; 
+        echo json_encode(
+        $validLogin->setUser($loginData['name'], true)); 
     } else {
-        echo 'Invalid password.';
+        echo json_encode(
+        $validLogin->setUser(null, false)); 
     } 
 
     // Free result set
     unset($stmt);
 
   } else{
+    // todo: insert to loginstatus class
     echo "No records matching your query were found.";
   }
 
