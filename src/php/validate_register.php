@@ -39,16 +39,21 @@ if($validated === TRUE) {
   print_r($postData); // You can now use POST data safely
   // echo $postData['name'];
   // echo $postData['file']['name'];
-  
-  // hash before send
-  $hash = password_hash($_POST['f_password'], PASSWORD_DEFAULT);
-  echo $hash; 
 
+  // check if user already registered
+  $stmt = $pdo->prepare('SELECT * FROM test_account1 WHERE username = ?');
+  $stmt->execute([$postData['name']]);
+  
+  if ($stmt->rowCount() > 0) {
+    echo "user already exists";
+    exit;
+  } 
+  
+  // hash before insert
+  $hash = password_hash($_POST['f_password'], PASSWORD_DEFAULT);
+  
   if (password_verify($_POST['f_passwordconfirm'], $hash)) {
       echo 'Password is valid!';
-  } else {
-      echo 'Invalid password.';
-  } 
 
   // insert
   try {
@@ -64,13 +69,17 @@ if($validated === TRUE) {
   // Close connection
   unset($pdo);
 
+
+  } else {
+      echo 'Invalid password.';
+  } 
+
   // upload
   // exit;  
 
 } else {
   echo "invalid"; 
-  print_r($postData); 
-    
+  print_r($postData);     
   print_r($validated); // Shows all the rules that failed along with the data
 }
 

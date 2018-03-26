@@ -30,15 +30,13 @@ $loginvalidated = $loginvalidator->validate(
   $loginData, $rules
 );
 
-$validLogin = new loginstatus();
+$userLogin = new loginStatus();
 
 // Check if validation was successful
 if($loginvalidated === TRUE) {
   // echo "Successful Validation\n";
   // print_r($loginData); // You can now use POST data safely
-  // echo $postData['name'];
-  // echo $postData['file']['name'];
-
+  
   // check user/password
   try {
   // check if user exists  
@@ -51,24 +49,25 @@ if($loginvalidated === TRUE) {
     $row = $stmt->fetch();
 
     if (password_verify($_POST['l_password'], $row['password'])) {
-        // echo "valid loggedin"; 
-        echo json_encode(
-        $validLogin->setUser($loginData['name'], true)); 
+      // valid
+      $userLogin->valid();
+      echo json_encode($userLogin->getStatus());
+      
     } else {
-        echo json_encode(
-        $validLogin->setUser(null, false)); 
+      // invalid login
+      echo json_encode($userLogin->getStatus());
     } 
 
     // Free result set
     unset($stmt);
 
-  } else{
-    // todo: insert to loginstatus class
-    echo "No records matching your query were found.";
+  } else {
+    //  echo "No records matching your query were found.";
+    echo json_encode($userLogin->getStatus());
   }
 
   } catch(PDOException $error){
-    die("ERROR: Could not able to execute $sql. " . $error->getMessage());
+    // die("ERROR: Could not able to execute $sql. " . $error->getMessage());
   }  
 
   // Close connection
@@ -78,9 +77,7 @@ if($loginvalidated === TRUE) {
   // exit;  
 
 } else {
-  echo "invalid"; 
   print_r($loginData); 
-    
   print_r($loginvalidated); // Shows all the rules that failed along with the data
 }
 

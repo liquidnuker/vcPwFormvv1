@@ -59,8 +59,7 @@ export default {
 
       };
     },
-    mounted: function () {
-    },
+    mounted: function () {},
     methods: {
       handleFileUpload: function (e) {
         this.file = e.target.files[0];
@@ -71,7 +70,7 @@ export default {
         regData.append("f_name", this.name);
         regData.append("f_password", this.password);
         regData.append("f_passwordconfirm", this.passwordconfirm);
-       
+
         // let self = this;
         axios.post("./src/php/validate_register.php", regData, {
           headers: {
@@ -83,7 +82,7 @@ export default {
           console.log("error");
         });
       },
-      login: function() {
+      login: function () {
         let loginData = new FormData();
         loginData.append("l_name", this.l_name);
         loginData.append("l_password", this.l_password);
@@ -95,15 +94,17 @@ export default {
             "Content-Type": "multipart/form-data"
           }
         }).then(function (response) {
-          // console.log(response.data);
-          console.log(response.data.loggedin + " user: " +
-          response.data.loggedinuser);
+          if (response.data.loggedIn) {
+            console.log("login ok");
+          } else {
+            console.log("redirect");
+          }
         }).catch(function () {
           console.log("error");
         });
       },
       validate: function (e, mode) {
-        e.preventDefault(); 
+        e.preventDefault();
 
         if (mode === "register") {
           this.register();
@@ -119,8 +120,8 @@ export default {
         //   console.log("invalid");
         //   // return false;   
         // });
-               
+
       }
     }
-}; 
+};
 </script>
