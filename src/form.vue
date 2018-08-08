@@ -1,7 +1,7 @@
 <template>
 <div id="vee-form">
   <!-- name target -->
-  <p>Register</p>
+  <p>Registerz</p>
   <form class="form1" 
   id="form" name="form" @submit="validate($event, 'register')" method="POST">
     <!-- username -->
